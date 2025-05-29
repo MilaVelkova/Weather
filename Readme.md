@@ -9,5 +9,10 @@ Technologies used:
 - HTML, CSS, JavaScript
 
 Setup instructions:
-1. Clone the project from gitHub
-2. Set up your credentials in applications.properties (url, username, password, API KEY)
+
+1. Clone the project from gitHub: https://github.com/MilaVelkova/Weather
+2. Create database
+3. Set up your credentials in environment in applications.properties (url, username, password, API KEY) for database 
+4. Go to the site https://openweathermap.org/ and generate your own API KEY and set up the environment
+5. Run the application and open browser on link http://localhost:8080/index.html
+6. CLick fetch Weather Data
