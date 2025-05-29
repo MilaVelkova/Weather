@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Weather Forecast</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<button id="fetch-data" onclick="fetchForecasts()">Fetch Weather Data</button>
+<h1>Full 16-Day Weather Forecast</h1>
+<table id="all-weather-table">
+    <thead>
+    <tr>
+        <th>City</th>
+        <th>Date</th>
+        <th>Max Temperature (°C)</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<h1>Days Above 25°C</h1>
+<table id="above25-table">
+    <thead>
+    <tr>
+        <th>City</th>
+        <th>Date</th>
+        <th>Max Temperature (°C)</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+    window.onload = function () {
+        loadForecasts();
+        loadAbove25();
+    };
+
+    function fetchForecasts(){
+        fetch('http://localhost:8080/api/fetch', { method: 'POST' })
+            .then(response => {
+                if (!response.ok) throw new Error("Fetch failed");
+                alert("Weather data fetched successfully")
+                loadForecasts();
+                loadAbove25();
+            })
+            .catch(err => alert("Error: " + err.message));
+    }
+
+    function loadForecasts() {
+        fetch('http://localhost:8080/api/all')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#all-weather-table tbody');
+                tbody.innerHTML = '';
+                data.forEach(entry => {
+                    const row = `<tr>
+              <td>${entry.city}</td>
+              <td>${entry.forecastDate}</td>
+              <td>${entry.maxTemp}</td>
+            </tr>`;
+                    tbody.innerHTML += row;
+                });
+
+                const button = document.querySelector('#fetch-data');
+                const firstRow =  document.querySelector('#all-weather-table tbody tr');
+
+                if (firstRow)
+                    button.disabled = true;
+            })
+            .catch(err => alert("Error loading all data: " + err.message));
+    }
+
+    function loadAbove25() {
+        fetch('http://localhost:8080/api/above25')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#above25-table tbody');
+                tbody.innerHTML = '';
+                data.forEach(entry => {
+                    const row = `<tr>
+              <td>${entry.city}</td>
+              <td>${entry.forecastDate}</td>
+              <td>${entry.maxTemp}</td>
+            </tr>`;
+                    tbody.innerHTML += row;
+                });
+            })
+            .catch(err => alert("Error loading hot days: " + err.message));
+    }
+</script>
+
+</body>
+</html>
